@@ -133,11 +133,12 @@ function creat_moon(){
   read -p "请输入你的ZeroTier虚拟局域网ID号：" you_net_ID
   zerotier-cli join $you_net_ID | grep OK
   if [ $? -eq 0 ]; then
-    green "加入网络成功！请去去zerotier管理页面，对加入的设备进行打钩"
+    green "加入网络成功！请去zerotier管理页面，对加入的设备进行打钩"
     read -s -n1 -p "确认zerotier管理页面加入该moon节点后按任意键继续... "
     blue "搭建ZeroTier的Moon中转服务器，生成moon配置文件"
     cd /var/lib/zerotier-one/
     blue "生成moon.json文件并对其进行编辑"
+    red "注意不要用小键盘输入，否则输入会乱码"
     zerotier-idtool initmoon identity.public > moon.json
     sleep 2s
     vi moon.json
