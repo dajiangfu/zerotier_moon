@@ -138,11 +138,24 @@ function creat_moon(){
     blue "搭建ZeroTier的Moon中转服务器，生成moon配置文件"
     cd /var/lib/zerotier-one/
     blue "生成moon.json文件并对其进行编辑"
-    red "注意不要用小键盘输入，否则输入会乱码"
+    ip_addr=`curl ipv4.icanhazip.com`
     zerotier-idtool initmoon identity.public > moon.json
-    sleep 2s
-    vi moon.json
-    green "编辑完成"
+    if sed -i "s/\[\]/\[ \"$ip_addr\/9993\" \]/" moon.json >/dev/null 2>/dev/null; then
+      green "编辑完成"
+    else
+      red "编辑出错"
+    fi
+    if [ "$release_os" == "centos" ]; then
+      blue "防火墙开启zerotier默认udp端口9993"
+      firewall-cmd --zone=public --add-port=9993/tcp --permanent
+      bule "防火墙重启"
+      firewall-cmd --reload
+    elif [ "$release_os" == "ubuntu" ]; then
+      blue "防火墙开启zerotier默认udp端口9993"
+      ufw allow 9993
+      bule "防火墙重启"
+      ufw reload
+    fi
     blue "生成签名文件"
     zerotier-idtool genmoon moon.json
     blue "创建moons.d文件夹，并把签名文件移动到文件夹内"
