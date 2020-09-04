@@ -148,7 +148,7 @@ function creat_moon(){
     if [ "$release_os" == "centos" ]; then
       blue "防火墙开启zerotier默认udp端口9993"
       firewall-cmd --zone=public --add-port=9993/tcp --permanent
-      bule "防火墙重启"
+      blue "防火墙重启"
       firewall-cmd --reload
     elif [ "$release_os" == "ubuntu" ]; then
       blue "防火墙开启zerotier默认udp端口9993"
