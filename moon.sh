@@ -13,7 +13,7 @@ function version_lt(){
   test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1";
 }
 
-#copy from ÇïË®ÒÝ±ù ss scripts
+#copy from ç§‹æ°´é€¸å†° ss scripts
 if [[ -f /etc/redhat-release ]]; then
   release_os="centos"
 elif cat /etc/issue | grep -Eqi "debian"; then
@@ -38,21 +38,21 @@ elif [ "$release_os" == "debian" ]; then
   systemPackage_os="apt"
 fi
 
-#ÐÞ¸ÄSSH¶Ë¿ÚºÅ
+#ä¿®æ”¹SSHç«¯å£å·
 function change_ssh_port(){
   cd
   declare -i port_num
-  read -p "ÇëÊäÈëÐÂ¶Ë¿ÚºÅ(1024-65535):" port_num
+  read -p "è¯·è¾“å…¥æ–°ç«¯å£å·(1024-65535):" port_num
   if [[ $port_num -ge 1024 && $port_num -le 65535 ]]; then
-    green " ÊäÈë¶Ë¿ÚºÅÕýÈ·£¬ÕýÔÚÉèÖÃ¸Ã¶Ë¿ÚºÅ"
+    green " è¾“å…¥ç«¯å£å·æ­£ç¡®ï¼Œæ­£åœ¨è®¾ç½®è¯¥ç«¯å£å·"
   else
-    red "ÊäÈëµÄ¶Ë¿ÚºÅ´íÎó£¬ÇëÖØÐÂÊäÈë"
+    red "è¾“å…¥çš„ç«¯å£å·é”™è¯¯ï¼Œè¯·é‡æ–°è¾“å…¥"
     unset port_num
     change_ssh_port
   fi
   grep -q "Port $port_num" /etc/ssh/sshd_config
   if [ $? -eq 0 ]; then
-    red " ¶Ë¿ÚÒÑ¾­Ìí¼Ó£¬ÇëÎðÖØ¸´Ìí¼Ó"
+    red " ç«¯å£å·²ç»æ·»åŠ ï¼Œè¯·å‹¿é‡å¤æ·»åŠ "
     return
   else
     sed -i "/Port 22/a\Port $port_num" /etc/ssh/sshd_config
@@ -64,14 +64,14 @@ function change_ssh_port(){
       ufw allow $port_num
       ufw reload
     fi
-    #Ä¿Ç°SELinux Ö§³ÖÈýÖÖÄ£Ê½£¬·Ö±ðÊÇenforcing£ºÇ¿ÖÆÄ£Ê½£¬permissive£º¿íÈÝÄ£Ê½£¬disabled£º¹Ø±Õ
+    #ç›®å‰SELinux æ”¯æŒä¸‰ç§æ¨¡å¼ï¼Œåˆ†åˆ«æ˜¯enforcingï¼šå¼ºåˆ¶æ¨¡å¼ï¼Œpermissiveï¼šå®½å®¹æ¨¡å¼ï¼Œdisabledï¼šå…³é—­
     if [ -f "/etc/selinux/config" ]; then
       CHECK=$(grep SELINUX= /etc/selinux/config | grep -v "#")
       if [ "$CHECK" != "SELINUX=disabled" ]; then
-        read -p "¼ì²âµ½SELinux¿ªÆô×´Ì¬£¬ÊÇ·ñ¼ÌÐø¿ªÆôSElinux ?ÇëÊäÈë [Y/n] :" yn
+        read -p "æ£€æµ‹åˆ°SELinuxå¼€å¯çŠ¶æ€ï¼Œæ˜¯å¦ç»§ç»­å¼€å¯SElinux ?è¯·è¾“å…¥ [Y/n] :" yn
         [ -z "${yn}" ] && yn="y"
         if [[ $yn == [Yy] ]]; then
-          green "Ìí¼Ó·ÅÐÐ$port_num¶Ë¿Ú¹æÔò"
+          green "æ·»åŠ æ”¾è¡Œ$port_numç«¯å£è§„åˆ™"
           $systemPackage_os -y install policycoreutils-python
           semanage port -a -t ssh_port_t -p tcp $port_num
         else
@@ -81,35 +81,35 @@ function change_ssh_port(){
             sed -i 's/SELINUX=permissive/SELINUX=disabled/g' /etc/selinux/config
           fi
           red "======================================================================="
-          red "¹Ø±Õselinuxºó£¬±ØÐëÖØÆôVPS²ÅÄÜÉúÐ§£¬ÔÙÖ´ÐÐ±¾½Å±¾£¬¼´½«ÔÚ3ÃëºóÖØÆô......"
+          red "å…³é—­selinuxåŽï¼Œå¿…é¡»é‡å¯VPSæ‰èƒ½ç”Ÿæ•ˆï¼Œå†æ‰§è¡Œæœ¬è„šæœ¬ï¼Œå³å°†åœ¨3ç§’åŽé‡å¯......"
           red "======================================================================="
           clear
-          green "ÖØÆôµ¹¼ÆÊ±3s"
+          green "é‡å¯å€’è®¡æ—¶3s"
           sleep 1s
           clear
-          green "ÖØÆôµ¹¼ÆÊ±2s"
+          green "é‡å¯å€’è®¡æ—¶2s"
           sleep 1s
           clear
-          green "ÖØÆôµ¹¼ÆÊ±1s"
+          green "é‡å¯å€’è®¡æ—¶1s"
           sleep 1s
           clear
-          green "ÖØÆôÖÐ..."
+          green "é‡å¯ä¸­..."
           reboot
         fi
       fi
     fi
     systemctl restart sshd.service
     sleep 1s
-    red " ÉÔºóÇëÊ¹ÓÃÐÞ¸ÄºÃµÄ¶Ë¿ÚÁ¬½ÓSSH"
+    red " ç¨åŽè¯·ä½¿ç”¨ä¿®æ”¹å¥½çš„ç«¯å£è¿žæŽ¥SSH"
   fi
 }
 
-#¹Ø±ÕSSHÄ¬ÈÏ22¶Ë¿Ú
+#å…³é—­SSHé»˜è®¤22ç«¯å£
 function close_ssh_default_port(){
   cd
   grep -q "#Port 22" /etc/ssh/sshd_config
   if [ $? -eq 0 ]; then
-    red " ¶Ë¿Ú22ÒÑ±»¹Ø±Õ£¬ÎÞÐèÖØ¸´²Ù×÷"
+    red " ç«¯å£22å·²è¢«å…³é—­ï¼Œæ— éœ€é‡å¤æ“ä½œ"
   else
     sed -i 's/Port 22/#Port 22/g' /etc/ssh/sshd_config
     if [ "$release_os" == "centos" ]; then
@@ -118,49 +118,49 @@ function close_ssh_default_port(){
       ufw reload
     fi
     systemctl restart sshd.service
-    green " ÐÂ¶Ë¿ÚÁ¬½Ó³É¹¦ºóÆÁ±ÎÔ­22¶Ë¿Ú³É¹¦"
+    green " æ–°ç«¯å£è¿žæŽ¥æˆåŠŸåŽå±è”½åŽŸ22ç«¯å£æˆåŠŸ"
   fi
 }
 
-#´´½¨moon½Úµã
+#åˆ›å»ºmoonèŠ‚ç‚¹
 function creat_moon(){
-  blue "°²×°zerotierÈí¼þ"
+  blue "å®‰è£…zerotierè½¯ä»¶"
   curl -s https://install.zerotier.com/ | sudo bash
-  blue "Æô¶¯zerotier"
+  blue "å¯åŠ¨zerotier"
   systemctl start zerotier-one.service
   systemctl enable zerotier-one.service
-  blue "½«°²×°ºÃZeroTierµÄ¼ÓÈëÄãÊÂÏÈ×¢²áºÃµÄZeroTierÐéÄâ¾ÖÓòÍøÖÐ"
-  read -p "ÇëÊäÈëÄãµÄZeroTierÐéÄâ¾ÖÓòÍøIDºÅ£º" you_net_ID
+  blue "å°†å®‰è£…å¥½ZeroTierçš„åŠ å…¥ä½ äº‹å…ˆæ³¨å†Œå¥½çš„ZeroTierè™šæ‹Ÿå±€åŸŸç½‘ä¸­"
+  read -p "è¯·è¾“å…¥ä½ çš„ZeroTierè™šæ‹Ÿå±€åŸŸç½‘IDå·ï¼š" you_net_ID
   zerotier-cli join $you_net_ID | grep OK
   if [ $? -eq 0 ]; then
-    green "¼ÓÈëÍøÂç³É¹¦£¡ÇëÈ¥È¥zerotier¹ÜÀíÒ³Ãæ£¬¶Ô¼ÓÈëµÄÉè±¸½øÐÐ´ò¹³"
-    read -s -n1 -p "È·ÈÏzerotier¹ÜÀíÒ³Ãæ¼ÓÈë¸Ãmoon½Úµãºó°´ÈÎÒâ¼ü¼ÌÐø... "
-    blue "´î½¨ZeroTierµÄMoonÖÐ×ª·þÎñÆ÷£¬Éú³ÉmoonÅäÖÃÎÄ¼þ"
+    green "åŠ å…¥ç½‘ç»œæˆåŠŸï¼è¯·åŽ»åŽ»zerotierç®¡ç†é¡µé¢ï¼Œå¯¹åŠ å…¥çš„è®¾å¤‡è¿›è¡Œæ‰“é’©"
+    read -s -n1 -p "ç¡®è®¤zerotierç®¡ç†é¡µé¢åŠ å…¥è¯¥moonèŠ‚ç‚¹åŽæŒ‰ä»»æ„é”®ç»§ç»­... "
+    blue "æ­å»ºZeroTierçš„Moonä¸­è½¬æœåŠ¡å™¨ï¼Œç”Ÿæˆmooné…ç½®æ–‡ä»¶"
     cd /var/lib/zerotier-one/
-    blue "Éú³Émoon.jsonÎÄ¼þ²¢¶ÔÆä½øÐÐ±à¼­"
+    blue "ç”Ÿæˆmoon.jsonæ–‡ä»¶å¹¶å¯¹å…¶è¿›è¡Œç¼–è¾‘"
     zerotier-idtool initmoon identity.public > moon.json
     sleep 2s
     vi moon.json
-    green "±à¼­Íê³É"
-    blue "Éú³ÉÇ©ÃûÎÄ¼þ"
+    green "ç¼–è¾‘å®Œæˆ"
+    blue "ç”Ÿæˆç­¾åæ–‡ä»¶"
     zerotier-idtool genmoon moon.json
-    blue "´´½¨moons.dÎÄ¼þ¼Ð£¬²¢°ÑÇ©ÃûÎÄ¼þÒÆ¶¯µ½ÎÄ¼þ¼ÐÄÚ"
+    blue "åˆ›å»ºmoons.dæ–‡ä»¶å¤¹ï¼Œå¹¶æŠŠç­¾åæ–‡ä»¶ç§»åŠ¨åˆ°æ–‡ä»¶å¤¹å†…"
     mkdir moons.d
     mv ./*.moon ./moons.d/
-    blue "zerotier-one·þÎñ"
+    blue "zerotier-oneæœåŠ¡"
     systemctl restart zerotier-one
-    green "moon½Úµã´´½¨Íê³É"
-    green "Çë¼ÇµÃ½«moons.dÎÄ¼þ¼Ð¿½±´³öÀ´ÓÃÓÚ¿Í»§¶ËµÄÅäÖÃ£¬Â·¾¶/var/lib/zerotier-one/"
+    green "moonèŠ‚ç‚¹åˆ›å»ºå®Œæˆ"
+    green "è¯·è®°å¾—å°†moons.dæ–‡ä»¶å¤¹æ‹·è´å‡ºæ¥ç”¨äºŽå®¢æˆ·ç«¯çš„é…ç½®ï¼Œè·¯å¾„/var/lib/zerotier-one/"
   else
-    red "¼ÓÈëÊ§°Ü£¬Çë¼ì²éÄãµÄÍøÂçIDºÅÓÐÎÞ´íÎó"
+    red "åŠ å…¥å¤±è´¥ï¼Œè¯·æ£€æŸ¥ä½ çš„ç½‘ç»œIDå·æœ‰æ— é”™è¯¯"
   fi
 }
 
-#ÉèÖÃ¼Æ»®ÈÎÎñ
+#è®¾ç½®è®¡åˆ’ä»»åŠ¡
 function crontab_edit(){
   cd
   cat /etc/crontab
-  read -p "Çë°´ÕÕÒÔÉÏ¸ñÊ½ÊäÈë¼Æ»®ÈÎÎñ£º" crontab_cmd
+  read -p "è¯·æŒ‰ç…§ä»¥ä¸Šæ ¼å¼è¾“å…¥è®¡åˆ’ä»»åŠ¡ï¼š" crontab_cmd
   rm -f /etc/crontab
   sleep 1s
   cat > /etc/crontab <<-EOF
@@ -188,64 +188,64 @@ EOF
   crontab /etc/crontab
   systemctl reload crond.service
   systemctl status crond.service
-  blue "±à¼­ºóµÄ¼Æ»®ÈÎÎñ£º"
+  blue "ç¼–è¾‘åŽçš„è®¡åˆ’ä»»åŠ¡ï¼š"
   echo
   crontab -l
 }
 
-#Çå³ý»º´æ
+#æ¸…é™¤ç¼“å­˜
 function del_cache(){
   cd
-  green " »º´æÒÑÇå³ýÍê±Ï"
+  green " ç¼“å­˜å·²æ¸…é™¤å®Œæ¯•"
   rm -f "$0"
 }
 
-#Ò»¼üÈ«×Ô¶¯°²×°
+#ä¸€é”®å…¨è‡ªåŠ¨å®‰è£…
 function auto_install(){
-  read -p "ÊÇ·ñ¹Ø±ÕSSHÄ¬ÈÏ22¶Ë¿Ú ?ÇëÊäÈë [Y/n] :" yn
+  read -p "æ˜¯å¦å…³é—­SSHé»˜è®¤22ç«¯å£ ?è¯·è¾“å…¥ [Y/n] :" yn
   [ -z "${yn}" ] && yn="y"
   if [[ $yn == [Yy] ]]; then
     close_ssh_default_port
     sleep 1s
   fi
-  read -p "ÊÇ·ñ´´½¨moon ?ÇëÊäÈë [Y/n] :" yn
+  read -p "æ˜¯å¦åˆ›å»ºmoon ?è¯·è¾“å…¥ [Y/n] :" yn
   [ -z "${yn}" ] && yn="y"
   if [[ $yn == [Yy] ]]; then
     creat_moon
     sleep 1s
   fi
-  read -p "ÊÇ·ñÉèÖÃ¼Æ»®ÈÎÎñ ?ÇëÊäÈë [Y/n] :" yn
+  read -p "æ˜¯å¦è®¾ç½®è®¡åˆ’ä»»åŠ¡ ?è¯·è¾“å…¥ [Y/n] :" yn
   [ -z "${yn}" ] && yn="y"
   if [[ $yn == [Yy] ]]; then
     echo
     crontab_edit
     sleep 1s
   fi
-  read -p "ÊÇ·ñÇå³ý»º´æ ?ÇëÊäÈë [Y/n] :" yn
+  read -p "æ˜¯å¦æ¸…é™¤ç¼“å­˜ ?è¯·è¾“å…¥ [Y/n] :" yn
   [ -z "${yn}" ] && yn="y"
   if [[ $yn == [Yy] ]]; then
     del_cache
   fi
 }
 
-#¿ªÊ¼²Ëµ¥
+#å¼€å§‹èœå•
 start_menu(){
   clear
   green " ======================================="
-  green " ½éÉÜ£º"
-  green " Ò»¼üzerotierÐéÄâ¾ÖÓòÍømoon½Úµã×ÛºÏ½Å±¾"
-  green " Ò»¼üÅäÖÃ¼Æ»®ÈÎÎñ¡¢ÐÞ¸ÄSSH¶Ë¿Ú"
+  green " ä»‹ç»ï¼š"
+  green " ä¸€é”®zerotierè™šæ‹Ÿå±€åŸŸç½‘moonèŠ‚ç‚¹ç»¼åˆè„šæœ¬"
+  green " ä¸€é”®é…ç½®è®¡åˆ’ä»»åŠ¡ã€ä¿®æ”¹SSHç«¯å£"
   green " ======================================="
   echo
-  green " 1. ÐÞ¸ÄSSH¶Ë¿ÚºÅ"
-  green " 2. ¹Ø±ÕSSHÄ¬ÈÏ22¶Ë¿Ú"
-  green " 3. Æô¶¯moon½Úµã°²×°½Å±¾"
-  green " 4. ÉèÖÃ¼Æ»®ÈÎÎñ"
-  green " 5. Çå³ý»º´æ"
-  green " 6. È«×Ô¶¯Ö´ÐÐ2-5"
-  blue " 0. ÍË³ö½Å±¾"
+  green " 1. ä¿®æ”¹SSHç«¯å£å·"
+  green " 2. å…³é—­SSHé»˜è®¤22ç«¯å£"
+  green " 3. å¯åŠ¨moonèŠ‚ç‚¹å®‰è£…è„šæœ¬"
+  green " 4. è®¾ç½®è®¡åˆ’ä»»åŠ¡"
+  green " 5. æ¸…é™¤ç¼“å­˜"
+  green " 6. å…¨è‡ªåŠ¨æ‰§è¡Œ2-5"
+  blue " 0. é€€å‡ºè„šæœ¬"
   echo
-  read -p "ÇëÊäÈëÊý×Ö:" num
+  read -p "è¯·è¾“å…¥æ•°å­—:" num
   case "$num" in
   1)
   change_ssh_port
@@ -254,19 +254,19 @@ start_menu(){
   2)
   close_ssh_default_port
   sleep 1s
-  read -s -n1 -p "°´ÈÎÒâ¼ü·µ»Ø²Ëµ¥ ... "
+  read -s -n1 -p "æŒ‰ä»»æ„é”®è¿”å›žèœå• ... "
   start_menu
   ;;
   3)
   creat_moon
   sleep 1s
-  read -s -n1 -p "°´ÈÎÒâ¼ü·µ»ØÉÏ¼¶²Ëµ¥ ... "
+  read -s -n1 -p "æŒ‰ä»»æ„é”®è¿”å›žä¸Šçº§èœå• ... "
   start_menu
   ;;
   4)
   crontab_edit
   sleep 1s
-  read -s -n1 -p "°´ÈÎÒâ¼ü·µ»Ø²Ëµ¥ ... "
+  read -s -n1 -p "æŒ‰ä»»æ„é”®è¿”å›žèœå• ... "
   start_menu
   ;;
   5)
@@ -280,7 +280,7 @@ start_menu(){
   ;;
   *)
   clear
-  red "ÇëÊäÈëÕýÈ·Êý×Ö"
+  red "è¯·è¾“å…¥æ­£ç¡®æ•°å­—"
   sleep 1s
   start_menu
   ;;
