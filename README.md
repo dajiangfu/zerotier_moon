@@ -24,8 +24,8 @@ Windows:
 
 路径一般是Windows: C:\ProgramData\ZeroTier\One
 
-# 2.测试是否成功（客户端cmd运行）若有出现你的服务器IP地址,即可证明moon连接成功
+# 2.测试是否成功
 
-执行命令：zerotier-cli listpeers
+客户端cmd执行命令：zerotier-cli listpeers 若有出现你的服务器IP地址,即可证明moon连接成功
 
 # 完成客户端配置
