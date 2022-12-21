@@ -4,7 +4,7 @@
 
 curl -O https://raw.githubusercontent.com/dajiangfu/zerotier_moon/master/moon.sh && chmod +x moon.sh && ./moon.sh
 
-# 1.配置客户端：
+# 1.配置客户端
 
 Linux:
 
